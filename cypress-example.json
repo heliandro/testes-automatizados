@@ -1,0 +1,13 @@
+{
+  "baseUrl": "https://apps.suaempresa-dev.com/dev",
+  "env": {
+      "client_id": "",
+      "client_secret": "",
+      "grant_type": "",
+      "urlSingleSignOn": "https://sso.suaempresa-dev.com/auth/realms/Empresa/protocol/openid-connect/token",
+      "resourcePayoSendPix": "/modulo-tal/api/v1/seu-recurso",
+      "resourceCobaPixPaymentTransaction": "/outro-modulo/api/v1/seu-recurso"
+  },
+  "chromeWebSecurity": false,
+  "testFiles": "**/*.feature"
+}
