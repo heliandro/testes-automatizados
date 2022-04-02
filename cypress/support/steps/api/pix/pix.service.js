@@ -1,4 +1,4 @@
-import { getHeaderAuthorization } from "../../../utils/authorization";
+import { HttpUtils } from "../../../utils/http.utils";
 
 export class PixService {
 
@@ -9,7 +9,7 @@ export class PixService {
         return cy.request({
             method: 'POST',
             url: Cypress.env("resourcePayoSendPix"),
-            headers: getHeaderAuthorization(),
+            headers: HttpUtils.getHeaderAuthorization(),
             body: payload,
             failOnStatusCode: false
         })
@@ -20,7 +20,7 @@ export class PixService {
         return cy.request({
             method: 'GET',
             url: `${Cypress.env("resourceCobaPixPaymentTransaction")}?${filtro}`,
-            headers: getHeaderAuthorization(),
+            headers: HttpUtils.getHeaderAuthorization(),
             failOnStatusCode: false
         })
     }
