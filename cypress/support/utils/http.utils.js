@@ -4,6 +4,6 @@ const getHeaderAuthorization = () => {
     }
 }
 
-export {
+export const HttpUtils = {
     getHeaderAuthorization
 }

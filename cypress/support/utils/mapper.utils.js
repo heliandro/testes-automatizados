@@ -7,6 +7,6 @@ const dataTableToArray = (dataTable) => {
     })
 }
 
-export {
+export const MapperUtils = {
     dataTableToArray
 }
