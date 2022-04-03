@@ -11,6 +11,8 @@ Abaixo será listado os arquivos e pastas mias importantes do projeto.
     cypress.json -> variaveis de ambiente e configuração
     cypress/ -> pasta principal do projeto
         fixtures/ -> arquivos json contendo cenarios de teste
+        requests/ -> arquivos contendo as requests dos cenarios executados
+        downloads/ -> arquivos de download de todos os tipos
         plugins/ -> plugins adicionados ao projeto
         integration/ -> arquivos descritivos contendo as features (cenarios) da api a ser testada
         support/
