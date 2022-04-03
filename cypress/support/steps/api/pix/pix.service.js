@@ -1,4 +1,5 @@
 import { HttpUtils } from "../../../utils/http.utils";
+import { MapperUtils } from "../../../utils/mapper.utils";
 
 export class PixService {
 
@@ -10,7 +11,7 @@ export class PixService {
             method: 'POST',
             url: Cypress.env("resourcePayoSendPix"),
             headers: HttpUtils.getHeaderAuthorization(),
-            body: payload,
+            body: MapperUtils.objectToJSON(payload),
             failOnStatusCode: false
         })
     }
