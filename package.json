@@ -18,5 +18,8 @@
   "cypress-cucumber-preprocessor": {
     "nonGlobalStepDefinitions": false,
     "stepDefinitions": "cypress/support/steps"
+  },
+  "dependencies": {
+    "date-fns": "^2.28.0"
   }
 }
