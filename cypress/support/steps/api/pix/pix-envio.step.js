@@ -2,20 +2,22 @@ import { Given, Then } from "cypress-cucumber-preprocessor/steps";
 import { PixService } from "./pix.service";
 import { PixController } from "./pix.controller";
 import { DateAdapter } from "../../../utils/date.adapter";
+import { FileIOAdapter } from "../../../utils/file-io.adapter";
 
+const fileIOAdapter = new FileIOAdapter('pix')
 const dateAdapter = new DateAdapter()
 const pixService = new PixService()
-const pixController = new PixController(pixService, dateAdapter)
+const pixController = new PixController(pixService, dateAdapter, fileIOAdapter)
 
 before(() => {
-    cy.apiAuthorization()
+    // cy.apiAuthorization()
 })
 
-Given('que realizo um envio de pix {string} para uma agencia e conta', (cenario) => {
-    pixController.realizarEnvioDePix(cenario)
+Given('Eu consumo o endpoint de envio de pix utilizando o cenario {string}', (cenario) => {
+    pixController.realizarEnvioDePix(cenario).then()
 })
 
-Then('a api retorna o status e mensagem esperada', (dataTable) => {
+Then('Eu recebo a resposta do endpoint de envio de pix', (dataTable) => {
     pixController.validarResponseDoEnvioDePix(dataTable)
 })
 

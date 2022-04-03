@@ -9,5 +9,10 @@ export const HttpStatus = {
     PRECONDITION_FAILED: { value: 412, message: 'Precondition Failed' },
     INTERNAL_SERVER_ERROR: { value: 500, message: 'Internal Server Error' },
     SERVICE_UNAVAILABLE: { value: 503, message: 'Service Unavailable' },
-    GATEWAY_TIMEOUT: { value: 504, message: 'Gateway Timeout' }
+    GATEWAY_TIMEOUT: { value: 504, message: 'Gateway Timeout' },
+}
+
+export const getHttpStatus = (statusValue) => {
+    const key = Object.keys(HttpStatus).find(key => HttpStatus[key].value === statusValue)
+    return HttpStatus[key]
 }

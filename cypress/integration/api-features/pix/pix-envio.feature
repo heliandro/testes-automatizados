@@ -2,16 +2,21 @@ Feature: Envio de PIX
 
   Como usuario, desejo realizar um envio de PIX por agencia e conta
 
-  Scenario Outline: Envio por agencia e conta com todos os dados corretosd
-    Given que realizo um envio de pix '<cenario>' para uma agencia e conta
-    Then a api retorna o status e mensagem esperada
+  Scenario Outline: Envio por agencia e conta com todos os dados corretos
+    Given Eu consumo o endpoint de envio de pix utilizando o cenario '<cenario>'
+    Then Eu recebo a resposta do endpoint de envio de pix
       | http_status | status_envio | mensagem             |
       | 200         | Enviado      | Pix em processamento |
-#    And consulto a resposta do servico externo de envio de pix no banco de dados
-#    And valido que a resposta do servico externo de envio de pix possui o status da operacao '<status_operacao>' correto
-#    And verifico os saldos AVAILABLE_BALANCE e CURRENT_BALANCE para saida pix com sucesso
-#    And consulto a transacao no banco de dados
-#    And valido que a transacao possui o status da transacao '<status_transacao>' correto
+#    And Eu consulto a transacao de pagamento de pix no banco de dados
+#    Then Eu valido a transacao de pagamento de pix com o status da operacao '<status_operacao>'
+    # TODO - Criar step generico? validar se é um consulta ao payment-transactions, caso seja o penultimo step abaixo ficara aqui e este se tornará uma 'validacao' step
+#    And Eu consulto os saldos AVAILABLE_BALANCE e CURRENT_BALANCE para saida pix com sucesso
+    # TODO - Criar step generico?
+#    Then Eu verifico que foi gerada uma saida de valor com o status '<status_entry>' e proposito '<proposito>'
+    # TODO - Criar step generico
+#    And Eu consulto a transacao de pagamento geral do sistema
+    # TODO - Criar step generico
+#    Then Eu valido a transacao de pagamento geral com o status da transacao '<status_transacao>'
 
     Examples:
       | cenario                  | status_operacao   | status_transacao | status_entry   | proposito    |
