@@ -24,6 +24,8 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+import { HttpStatus } from "./enums/http-status.enum";
+
 Cypress.Commands.add('apiAuthorization', () => {
     cy.request({
         method: 'POST',
@@ -36,9 +38,8 @@ Cypress.Commands.add('apiAuthorization', () => {
         failOnStatusCode: false,
         form: true
     }).then(response => {
-        if (response.status === 200) {
-            const data = response.body
-            Cypress.env('apiAccessToken', data.access_token)
-        }
+        const { status, body } = response
+        if (status === HttpStatus.OK.value && body.access_token)
+            Cypress.env('apiAccessToken', body.access_token)
     })
 })
