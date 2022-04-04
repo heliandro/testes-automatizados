@@ -24,9 +24,26 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-import { HttpStatus } from "./enums/http-status.enum";
+// import { HttpStatus } from "./enums/http-status.enum";
+// import { DateAdapter } from "./utils/date.adapter";
+
+const { DateAdapter } = require('./utils/date.adapter')
+const { HttpStatus } = require("./enums/http-status.enum");
+
+const dateAdapter = new DateAdapter()
+
+Cypress.Commands.add('clearEnvironmentVariables', () => {
+    Cypress.env('apiAccessToken', '')
+    Cypress.env('apiAccessTokenDate', '')
+})
 
 Cypress.Commands.add('apiAuthorization', () => {
+    const apiAccessTokenDate = Cypress.env('apiAccessTokenDate')
+    if (apiAccessTokenDate && dateAdapter.diffCurrentDateFor(dateAdapter.toDate(apiAccessTokenDate), 'minute') < 30)
+        return
+
+    console.log('apiAuthorization::init::request')
+
     cy.request({
         method: 'POST',
         url: `${Cypress.env('urlSingleSignOn')}`,
@@ -39,7 +56,8 @@ Cypress.Commands.add('apiAuthorization', () => {
         form: true
     }).then(response => {
         const { status, body } = response
-        if (status === HttpStatus.OK.value && body.access_token)
-            Cypress.env('apiAccessToken', body.access_token)
+        if (status !== HttpStatus.OK.value) cy.clearEnvironmentVariables()
+        Cypress.env('apiAccessToken', body.access_token)
+        Cypress.env('apiAccessTokenDate', dateAdapter.getToday().toISOString())
     })
 })

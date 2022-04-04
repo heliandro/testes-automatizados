@@ -20,10 +20,9 @@ export class PixController {
     validarResponseDoEnvioDePix(dataTable) {
         const dadoEsperado = MapperUtils.dataTableToArray(dataTable)[0]
         cy.get('@response_pix__enviar_pix').then((response) => {
-            console.log('ohh yearr::', response)
-            expect(response.status).to.eq(HttpStatus.CREATED.value)
-            expect(response.body.status).to.eq(dadoEsperado.status_envio)
-            expect(response.body.message).to.eq(dadoEsperado.mensagem)
+            expect(response.status).to.eq(dadoEsperado.http_status)
+            expect(response.body).to.haveOwnProperty('status').and.eq(dadoEsperado.status_envio)
+            expect(response.body).to.haveOwnProperty('message').and.eq(dadoEsperado.mensagem)
             expect(response.body).to.haveOwnProperty('instructionIdentifier').and.not.empty
             Cypress.env('instructionIdentifier', response.body?.instructionIdentifier ?? '')
         })

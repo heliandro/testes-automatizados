@@ -10,7 +10,7 @@ const pixService = new PixService()
 const pixController = new PixController(pixService, dateAdapter, fileIOAdapter)
 
 before(() => {
-    // cy.apiAuthorization()
+    cy.apiAuthorization()
 })
 
 Given('Eu consumo o endpoint de envio de pix utilizando o cenario {string}', (cenario) => {

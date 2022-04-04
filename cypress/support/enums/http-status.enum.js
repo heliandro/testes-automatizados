@@ -11,8 +11,3 @@ export const HttpStatus = {
     SERVICE_UNAVAILABLE: { value: 503, message: 'Service Unavailable' },
     GATEWAY_TIMEOUT: { value: 504, message: 'Gateway Timeout' },
 }
-
-export const getHttpStatus = (statusValue) => {
-    const key = Object.keys(HttpStatus).find(key => HttpStatus[key].value === statusValue)
-    return HttpStatus[key]
-}
