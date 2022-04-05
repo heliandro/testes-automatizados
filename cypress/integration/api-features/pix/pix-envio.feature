@@ -4,9 +4,9 @@ Feature: Envio de PIX
 
   Scenario Outline: Envio por agencia e conta com todos os dados corretos
     Given Eu consumo o endpoint de envio de pix utilizando o cenario '<cenario>'
-#    Then Eu recebo a resposta do endpoint de envio de pix
-#      | http_status | status_envio | mensagem             |
-#      | 200         | Enviado      | Pix em processamento |
+    Then Eu recebo a resposta do endpoint de envio de pix
+      | http_status | status_envio | mensagem             |
+      | 200         | Enviado      | Pix em processamento |
 #    And Eu consulto a transacao de pagamento de pix no banco de dados
 #    Then Eu valido a transacao de pagamento de pix com o status da operacao '<status_operacao>'
     # TODO - Criar step generico? validar se é um consulta ao payment-transactions, caso seja o penultimo step abaixo ficara aqui e este se tornará uma 'validacao' step

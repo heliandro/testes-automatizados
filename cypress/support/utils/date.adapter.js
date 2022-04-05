@@ -1,21 +1,26 @@
-import {add, isBefore, isAfter, toDate, sub, format, formatDistanceStrict} from "date-fns";
-import { utcToZonedTime, zonedTimeToUtc } from "date-fns-tz";
+import {
+    add,
+    format,
+    formatDistanceStrict,
+    formatISO, hoursToMinutes, hoursToSeconds,
+    isAfter,
+    isBefore, isValid, minutesToHours,
+    minutesToSeconds, secondsToHours,
+    secondsToMinutes,
+    sub
+} from "date-fns";
+import {zonedTimeToUtc} from "date-fns-tz";
 
 export class DateAdapter {
 
-    constructor (location) {
-        this.location = location ?? 'en-US'
+    constructor() {
         this.timezone = 'America/Sao_Paulo'
         this.value = null
     }
 
     parseToMyTimeZone(date) {
-        this.value = utcToZonedTime(date ?? this.value, this.timezone)
+        this.value = zonedTimeToUtc(date ?? this.value, this.timezone)
         return this
-    }
-
-    toISOString(date) {
-        return format(date ?? this.value, 'yyyy-MM-dd\'T\'HH:mm:ss.SSS\'Z\'')
     }
 
     getToday() {
@@ -24,50 +29,53 @@ export class DateAdapter {
     }
 
     getTomorrow() {
-        this.value = add(this.getToday().value, { days: 1 })
+        this.value = add(this.getToday().value, {days: 1})
         return this
     }
 
     getTodayMoreDays(numberOfDays) {
-        this.value = add(this.getToday().value, { days: numberOfDays })
+        this.value = add(this.getToday().value, {days: numberOfDays})
         return this
     }
 
     getTodayMinusDays(numberOfDays) {
-        this.value = sub(this.getToday().value, { days: numberOfDays })
+        this.value = sub(this.getToday().value, {days: numberOfDays})
         return this
     }
 
-    formatToDayMonthYear(date) {
-        return format(date ?? this.value, 'dd-MM-yyyy')
+    diffCurrentDateFor(dateToCompare, unit = 'hour') {
+        return parseInt(formatDistanceStrict(dateToCompare, this.getToday().value, {unit, roundingMethod: 'ceil'}))
     }
 
-    formatToYearMonthDay(date) {
-        return format(date ?? this.value, 'yyyy-MM-dd')
-    }
+    isBefore(date, dateToCompare) { return isBefore(date, dateToCompare) }
+
+    isAfter(date, dateToCompare) { return isAfter(date, dateToCompare) }
+
+    isValid(date) { return isValid(date ?? this.value) }
 
     toDate(dateString) {
         this.value = this.parseToMyTimeZone(new Date(dateString)).value
         return this
     }
 
-    isBefore(date, dateToCompare) {
-        return isBefore(date, dateToCompare)
-    }
+    toISOString(date) { return formatISO(date ?? this.value) }
 
-    isBeforeString(dateString, dateStringToCompare) {
-        return this.isBefore(this.toDate(dateString), this.toDate(dateStringToCompare))
-    }
+    formatTo(date, pattern) { return format(date ?? this.value, pattern) }
 
-    isAfter(date, dateToCompare) {
-        return isAfter(date, dateToCompare)
-    }
+    formatToDayMonthYear(date) { return format(date ?? this.value, 'dd-MM-yyyy') }
 
-    isAfterString(dateString, dateStringToCompare) {
-        return this.isAfter(this.toDate(dateString), this.toDate(dateStringToCompare))
-    }
+    formatToYearMonthDay(date) { return format(date ?? this.value, 'yyyy-MM-dd') }
 
-    diffCurrentDateFor(dateToCompare, unit = 'hour') {
-        return parseInt(formatDistanceStrict(dateToCompare, this.getToday().value, { unit, roundingMethod: 'ceil' }))
-    }
+    secondsToMinutes(seconds) { return secondsToMinutes(seconds) }
+
+    secondsToHours(seconds) { return secondsToHours(seconds) }
+
+    minutesToSeconds(minutes) { return minutesToSeconds(minutes) }
+
+    minutesToHours(minutes) { return minutesToHours(minutes) }
+
+    hoursToMinutes(hour) { return hoursToMinutes(hour) }
+
+    hoursToSeconds(hour) { return hoursToSeconds(hour) }
+
 }

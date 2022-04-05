@@ -24,7 +24,7 @@ export class PixController {
             expect(response.body).to.haveOwnProperty('status').and.eq(dadoEsperado.status_envio)
             expect(response.body).to.haveOwnProperty('message').and.eq(dadoEsperado.mensagem)
             expect(response.body).to.haveOwnProperty('instructionIdentifier').and.not.empty
-            Cypress.env('instructionIdentifier', response.body?.instructionIdentifier ?? '')
+            Cypress.env('pixInstructionIdentifier', response.body.instructionIdentifier)
         })
     }
 

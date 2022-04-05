@@ -58,7 +58,7 @@ export class FileIOAdapter {
      * @param {ReadOptions} readOptions
      * @returns {Promise<Object>}
      */
-    getDataFromFile = (fileName, readOptions= this.readOptions) => {
+    getDataFromFile = (fileName, readOptions = this.readOptions) => {
         return this.#readFile(fileName, { ...readOptions },(data, resolve, reject) => {
             if (data) resolve(data)
             reject('Arquivo não encontrado!')

@@ -1,5 +1,5 @@
-import { HttpUtils } from "../../../utils/http.utils";
-import { MapperUtils } from "../../../utils/mapper.utils";
+import { HttpUtils } from "../utils/http.utils";
+import { MapperUtils } from "../utils/mapper.utils";
 
 export class PixService {
 
