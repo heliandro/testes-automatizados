@@ -12,7 +12,8 @@ const environmentVars = [
 
 const isAccessTokenExpired = (dateString, expirationTime) => {
     if (dateString && expirationTime && dateAdapter.toDate(dateString).isValid() && typeof expirationTime === 'number')
-        return dateAdapter.diffCurrentDateFor(dateAdapter.toDate(dateString).value, 'minute') < expirationTime
+        return dateAdapter.diffCurrentDateFor(dateAdapter.toDate(dateString).value, 'minute') >= expirationTime
+    return true
 }
 
 const getEnvironmentVariables = () => {
@@ -26,7 +27,7 @@ const clearEnvironmentVariables = () => {
 Cypress.Commands.add('apiAuthentication', () => {
     const { apiAccessTokenDate, apiAccessTokenExpirationTimeInMinutes } = getEnvironmentVariables()
 
-    if (isAccessTokenExpired(apiAccessTokenDate, apiAccessTokenExpirationTimeInMinutes)) return
+    if (!isAccessTokenExpired(apiAccessTokenDate, apiAccessTokenExpirationTimeInMinutes)) return
 
     authenticationService.apiAuthentication()
         .then(({ access_token, expires_in }) => {
@@ -35,7 +36,7 @@ Cypress.Commands.add('apiAuthentication', () => {
             Cypress.env('apiAccessTokenExpirationTimeInMinutes', dateAdapter.secondsToMinutes(expires_in))
         })
         .catch(error => {
-            console.error(error)
+            console.error('ops! ocorreu um erro', error)
             clearEnvironmentVariables()
         })
 })
