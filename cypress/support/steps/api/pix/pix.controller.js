@@ -4,13 +4,19 @@ import { FileType } from "../../../enums/file.enum";
 
 export class PixController {
 
-    constructor(pixService, dateAdapter, fileIoAdapter) {
+    instructionIdentifier = ''
+
+    constructor(pixService, fileIoAdapter) {
         this.pixService = pixService
-        this.dateAdapter = dateAdapter
         this.fileIoAdapter = fileIoAdapter
     }
 
+    initParamsNovoCenario() {
+        this.instructionIdentifier = ''
+    }
+
     async realizarEnvioDePix(cenario) {
+        this.initParamsNovoCenario()
         const payloadDoCenario = await this.fileIoAdapter.getDataCenarioFromFixtureFile('pix-envio.json', cenario)
         const responseAlias = 'response_pix__enviar_pix'
         const response = await this.pixService.enviarPix(payloadDoCenario, responseAlias)
@@ -20,24 +26,30 @@ export class PixController {
     validarResponseDoEnvioDePix(dataTable) {
         const dadoEsperado = MapperUtils.dataTableToArray(dataTable)[0]
         cy.get('@response_pix__enviar_pix').then((response) => {
-            expect(response.status).to.eq(dadoEsperado.http_status)
-            expect(response.body).to.haveOwnProperty('status').and.eq(dadoEsperado.status_envio)
-            expect(response.body).to.haveOwnProperty('message').and.eq(dadoEsperado.mensagem)
-            expect(response.body).to.haveOwnProperty('instructionIdentifier').and.not.empty
-            Cypress.env('pixInstructionIdentifier', response.body.instructionIdentifier)
+            expect(response.status).to.equal(parseInt(dadoEsperado.httpStatus))
+            expect(response.body).to.have.property('status').and.equal(dadoEsperado.statusEnvio)
+            expect(response.body).to.have.property('message').and.equal(dadoEsperado.mensagem)
+            expect(response.body).to.have.property('instructionIdentifier')
+                .and.to.satisfy(value => value.length > 0)
+            this.instructionIdentifier = response.body.instructionIdentifier
         })
     }
 
-    consultarTransacaoDePix() {
-        this.pixService.consultarTrasacao(Cypress.env('instructionIdentifier'))
-            .as('response_pix__consultar_trasacao')
+    async consultarTransacaoDePix() {
+        const responseAlias = 'response_pix__consultar_transacao_pix'
+        const response = await this.pixService.consultarTrasacao(this.instructionIdentifier, responseAlias)
+        await this.fileIoAdapter.saveDataAsFile(`${responseAlias}.${FileType.JSON}`, response.body)
     }
 
-    validarStatusDaTrasacaoDePix(statusEnvioPix) {
-        cy.get('@response_pix__consultar_trasacao').then((response) => {
-            const transacao = response.body.content[0]
-            expect(response.status).to.eq(HttpStatus.OK.value)
-            expect(transacao.status).to.be.eq(statusEnvioPix)
+    validarTransacaoDePixStatusOperacao(statusOperacao) {
+        cy.get('@response_pix__consultar_transacao_pix').then((response) => {
+            expect(response.status).to.equal(HttpStatus.OK.value)
+            expect(response.body).to.have.property('totalElements').and.to.equal(1)
+            expect(response.body).to.have.property('content')
+            expect(response.body.content).to.have.length(1)
+            expect(response.body.content[0]).to.have.property('instructionIdentifier')
+                .and.to.equal(this.instructionIdentifier)
+            expect(response.body.content[0]).to.have.property('status').to.equal(statusOperacao)
         })
     }
 }
